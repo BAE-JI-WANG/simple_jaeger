@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jaeger-agent-configuration
+  namespace: observability
+data:
+  agent.yaml: |
+    agent:
+      collector:
+        host-port: "jaeger-collector.default.svc.cluster.local:14250"
+      http-server:
+        host-port: ":5778"
+      processors:
+        - model:
+            model: jaeger
+          workers: 10
+          server:
+            host-port: ":6831"
+        - model:
+            model: jaeger
+          workers: 10
+          server:
+            host-port: ":6832"
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: jaeger-agent
+  namespace: observability
+spec:
+  selector:
+    matchLabels:
+      app: jaeger
+      component: agent
+  template:
+    metadata:
+      labels:
+        app: jaeger
+        component: agent
+    spec:
+      containers:
+        - name: jaeger-agent
+          image: jaegertracing/jaeger-agent:1.30.0
+          ports:
+            - containerPort: 5775
+            - containerPort: 6831
+            - containerPort: 6832
+            - containerPort: 5778
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/jaeger
+              subPath: agent.yaml
+          env:
+            - name: SPAN_STORAGE_TYPE
+              value: elasticsearch
+            - name: ES_SERVER_URLS
+              value: http://elasticsearch.default.svc.cluster.local:9200
+            - name: COLLECTOR_HOST_PORT
+              value: jaeger-collector.default.svc.cluster.local:14250
+            - name: REPORTER_GRPC_HOST_PORT
+              value: jaeger-collector.default.svc.cluster.local:14250
+      volumes:
+        - name: config-volume
+          configMap:
+            name: jaeger-agent-configuration
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger-agent
+  namespace: observability
+spec:
+  ports:
+    - port: 5775
+      name: zk-compact-trft
+    - port: 6831
+      name: udp-trft
+    - port: 6832
+      name: udp-trft-batch
+    - port: 5778
+      name: config
+  selector:
+    app: jaeger
+    component: agent

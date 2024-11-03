@@ -1,0 +1,18 @@
+apiVersion: jaegertracing.io/v1
+kind: Jaeger
+metadata:
+  name: jaeger
+  namespace: observability
+spec:
+  strategy: production
+  collector:
+    replicas: 2
+  ingester:
+    replicas: 2
+  storage:
+    type: elasticsearch
+    options:
+      es:
+        server-urls: http://elasticsearch.observability.svc.cluster.local:9200
+  agent:
+    strategy: DaemonSet

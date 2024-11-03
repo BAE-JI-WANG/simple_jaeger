@@ -1,0 +1,20 @@
+2024/11/03 09:29:26 maxprocs: Leaving GOMAXPROCS=12: CPU quota undefined
+***************************************************************************************************
+*** WARNING jaeger-agent is deprecated. See https://github.com/jaegertracing/jaeger/issues/4739 ***
+***************************************************************************************************
+2024/11/03 09:29:26 application version: git-commit=0824fc250c672c53afd8730651f133134a2079fb, git-version=v1.61.0, build-date=2024-09-15T01:47:31Z
+{"level":"info","ts":1730626166.5088315,"caller":"flags/service.go:99","msg":"Mounting metrics handler on admin server","route":"/metrics"}
+{"level":"info","ts":1730626166.5089147,"caller":"flags/service.go:105","msg":"Mounting expvar handler on admin server","route":"/debug/vars"}
+{"level":"info","ts":1730626166.5090353,"caller":"flags/admin.go:119","msg":"Mounting health check on admin server","route":"/"}
+{"level":"info","ts":1730626166.5091062,"caller":"flags/admin.go:133","msg":"Starting admin HTTP server","http-addr":":14271"}
+{"level":"info","ts":1730626166.5091484,"caller":"flags/admin.go:111","msg":"Admin server started","http.host-port":"[::]:14271","health-status":"unavailable"}
+{"level":"info","ts":1730626166.5092695,"caller":"grpc/builder.go:63","msg":"Agent requested insecure grpc connection to collector(s)"}
+{"level":"info","ts":1730626166.5093062,"caller":"grpc@v1.66.2/clientconn.go:162","msg":"[core] original dial target is: \"dns:///jaeger-collector-headless.observability:14250\""}
+{"level":"info","ts":1730626166.5093596,"caller":"grpc@v1.66.2/clientconn.go:440","msg":"[core] [Channel #1]Channel created"}
+{"level":"info","ts":1730626166.5093963,"caller":"grpc@v1.66.2/clientconn.go:193","msg":"[core] [Channel #1]parsed dial target is: resolver.Target{URL:url.URL{Scheme:\"dns\", Opaque:\"\", User:(*url.Userinfo)(nil), Host:\"\", Path:\"/jaeger-collector-headless.observability:14250\", RawPath:\"\", OmitHost:false, ForceQuery:false, RawQuery:\"\", Fragment:\"\", RawFragment:\"\"}}"}
+{"level":"info","ts":1730626166.5094259,"caller":"grpc@v1.66.2/clientconn.go:194","msg":"[core] [Channel #1]Channel authority set to \"jaeger-collector-headless.observability:14250\""}
+{"level":"info","ts":1730626166.5095413,"caller":"grpc/builder.go:104","msg":"Checking connection to collector"}
+{"level":"info","ts":1730626166.5095696,"caller":"grpc/builder.go:120","msg":"Agent collector connection state change","dialTarget":"dns:///jaeger-collector-headless.observability:14250","status":"IDLE"}
+{"level":"info","ts":1730626166.5101545,"caller":"agent/main.go:80","msg":"Starting agent"}
+{"level":"info","ts":1730626166.510216,"caller":"healthcheck/handler.go:118","msg":"Health Check state change","status":"ready"}
+{"level":"info","ts":1730626166.5102315,"caller":"app/agent.go:61","msg":"Starting jaeger-agent HTTP server","http-port":5778}

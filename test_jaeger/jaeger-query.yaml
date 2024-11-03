@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jaeger-query-configuration
+  namespace: observability
+data:
+  query.yaml: |
+    query:
+      grpc:
+        host-port: ":16685"
+      http:
+        host-port: ":16686"
+      metrics:
+        prometheus:
+          host-port: ":8889"
+      storage:
+        type: elasticsearch
+        elasticsearch:
+          server-urls: http://elasticsearch.observability.svc.cluster.local:9200
+      collector:
+        grpc:
+          host-port: "jaeger-collector.observability.svc.cluster.local:14250"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jaeger-query
+  namespace: observability
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jaeger
+      component: query
+  template:
+    metadata:
+      labels:
+        app: jaeger
+        component: query
+    spec:
+      containers:
+        - name: jaeger-query
+          image: jaegertracing/jaeger-query:1.30.0
+          ports:
+            - containerPort: 16685
+            - containerPort: 16686
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/jaeger/query.yaml
+              subPath: query.yaml
+          env:
+            - name: SPAN_STORAGE_TYPE
+              value: elasticsearch
+            - name: ES_SERVER_URLS
+              value: http://elasticsearch.observability.svc.cluster.local:9200
+            - name: JAEGER_AGENT_PORT
+              value: "6831"
+            - name: COLLECTOR_GRPC_HOST_PORT
+              value: "jaeger-collector.observability.svc.cluster.local:14250"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: jaeger-query-configuration
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger-query
+  namespace: observability
+spec:
+  ports:
+    - port: 16685
+      name: grpc
+    - port: 16686
+      name: http
+  selector:
+    app: jaeger
+    component: query

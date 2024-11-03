@@ -1,0 +1,102 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jaeger-collector-configuration
+  namespace: observability
+data:
+  collector.yaml: |
+    collector:
+      grpc:
+        host-port: ":14250"
+        tls:
+          enabled: false
+      http:
+        host-port: ":14268"
+      queue:
+        size: 10000
+      metrics:
+        prometheus:
+          host-port: ":8888"
+      sampling:
+        strategies-file: /etc/jaeger/sampling_strategies.json
+      es:
+        server-urls: http://elasticsearch.observability.svc.cluster.local:9200
+        index-prefix: jaeger
+        use-aliases: true
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jaeger-sampling-configuration
+  namespace: observability
+data:
+  sampling_strategies.json: |
+    {
+      "default_strategy": {
+        "type": "probabilistic",
+        "param": 1.0
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jaeger-collector
+  namespace: observability
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jaeger
+      component: collector
+  template:
+    metadata:
+      labels:
+        app: jaeger
+        component: collector
+    spec:
+      containers:
+        - name: jaeger-collector
+          image: jaegertracing/jaeger-collector:1.30.0
+          ports:
+            - containerPort: 14267
+            - containerPort: 14268
+            - containerPort: 14250
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/jaeger/collector.yaml
+              subPath: collector.yaml
+            - name: sampling-strategies
+              mountPath: /etc/jaeger/sampling_strategies.json
+              subPath: sampling_strategies.json
+          env:
+            - name: SPAN_STORAGE_TYPE
+              value: elasticsearch
+            - name: ES_SERVER_URLS
+              value: http://elasticsearch.observability.svc.cluster.local:9200
+            - name: SAMPLING_STRATEGIES_FILE
+              value: /etc/jaeger/sampling_strategies.json
+      volumes:
+        - name: config-volume
+          configMap:
+            name: jaeger-collector-configuration
+        - name: sampling-strategies
+          configMap:
+            name: jaeger-sampling-configuration
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger-collector
+  namespace: observability
+spec:
+  ports:
+    - port: 14267
+      name: c-tchan-trft
+    - port: 14268
+      name: c-binary-trft
+    - port: 14250
+      name: grpc
+  selector:
+    app: jaeger
+    component: collector

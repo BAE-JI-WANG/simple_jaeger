@@ -1,0 +1,20 @@
+2024/11/03 09:29:13 maxprocs: Leaving GOMAXPROCS=12: CPU quota undefined
+2024/11/03 09:29:13 application version: git-commit=0824fc250c672c53afd8730651f133134a2079fb, git-version=v1.61.0, build-date=2024-09-15T01:47:31Z
+{"level":"info","ts":1730626153.2993746,"caller":"flags/service.go:99","msg":"Mounting metrics handler on admin server","route":"/metrics"}
+{"level":"info","ts":1730626153.2994266,"caller":"flags/service.go:105","msg":"Mounting expvar handler on admin server","route":"/debug/vars"}
+{"level":"info","ts":1730626153.2995584,"caller":"flags/admin.go:119","msg":"Mounting health check on admin server","route":"/"}
+{"level":"info","ts":1730626153.2996411,"caller":"flags/admin.go:133","msg":"Starting admin HTTP server","http-addr":":14269"}
+{"level":"info","ts":1730626153.2996857,"caller":"flags/admin.go:111","msg":"Admin server started","http.host-port":"[::]:14269","health-status":"unavailable"}
+{"level":"info","ts":1730626153.31216,"caller":"config/config.go:181","msg":"Elasticsearch detected","version":7}
+{"level":"info","ts":1730626153.5036912,"caller":"static/provider.go:149","msg":"Loading sampling strategies","filename":"/etc/jaeger/sampling/sampling.json"}
+{"level":"warn","ts":1730626153.5040247,"caller":"static/provider.go:71","msg":"Default operations level strategies will not be included for Ratelimiting service strategies.This behavior will be changed in future releases. Cf. https://github.com/jaegertracing/jaeger/issues/5270"}
+{"level":"info","ts":1730626153.5075758,"caller":"grpc@v1.66.2/server.go:684","msg":"[core] [Server #1]Server created"}
+{"level":"info","ts":1730626153.507707,"caller":"server/grpc.go:93","msg":"Starting jaeger-collector gRPC server","grpc.host-port":"[::]:14250"}
+{"level":"info","ts":1730626153.5077496,"caller":"server/http.go:45","msg":"Starting jaeger-collector HTTP server","http host-port":":14268"}
+{"level":"info","ts":1730626153.507819,"caller":"grpc@v1.66.2/server.go:880","msg":"[core] [Server #1 ListenSocket #2]ListenSocket created"}
+{"level":"info","ts":1730626153.5079696,"caller":"handler/otlp_receiver.go:69","msg":"OTLP receiver status change","status":"StatusStarting"}
+{"level":"info","ts":1730626153.5080051,"caller":"grpc@v1.66.2/server.go:684","msg":"[core] [Server #3]Server created"}
+{"level":"info","ts":1730626153.5080187,"caller":"otlpreceiver@v0.109.0/otlp.go:103","msg":"Starting GRPC server","endpoint":"0.0.0.0:4317"}
+{"level":"info","ts":1730626153.5080597,"caller":"otlpreceiver@v0.109.0/otlp.go:153","msg":"Starting HTTP server","endpoint":"0.0.0.0:4318"}
+{"level":"info","ts":1730626153.508085,"caller":"grpc@v1.66.2/server.go:880","msg":"[core] [Server #3 ListenSocket #4]ListenSocket created"}
+{"level":"info","ts":1730626153.5081007,"caller":"healthcheck/handler.go:118","msg":"Health Check state change","status":"ready"}
